@@ -427,6 +427,14 @@ namespace GotifyClient
 
             // 显示通知
             _notificationService.ShowNotification(message);
+
+            // ===== 自动复制到剪贴板=====
+                Invoke(new Action(() =>
+                {
+                    System.Windows.Forms.Clipboard.SetText(message.Message);
+                }));
+            // ===== 自动复制到剪贴板=====
+            
         }
 
         private void OnConnectionStatusChanged(string status)
