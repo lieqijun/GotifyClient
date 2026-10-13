@@ -42,6 +42,7 @@ namespace GotifyClient.Services
                 if (_webSocket.State == WebSocketState.Open)
                 {
                     _isConnected = true;
+                    _reconnectInterval = 5000; // 连上成功，重置重连间隔
                     ConnectionStatusChanged?.Invoke("已连接");
                     
                     // 开始监听消息
@@ -64,24 +65,15 @@ namespace GotifyClient.Services
 
         private async Task ReconnectAsync()
         {
-            int retryCount = 0;
-            int maxRetryCount = 10; // 最大重连次数
             while (_enableReconnect && !_isConnected)
             {
                 try
                 {
-                    if (retryCount >= maxRetryCount)
-                    {
-                        ConnectionStatusChanged?.Invoke("重连失败: 达到最大重连次数");
-                        break;
-                    }
-
                     await Task.Delay(_reconnectInterval);
                     await ConnectAsync();
                 }
                 catch (Exception ex)
                 {
-                    retryCount++;
                     System.Diagnostics.Debug.WriteLine($"重连尝试失败 (第{retryCount}次): {ex.Message}");
                     
                     // 动态增加重连间隔（例如每次失败后增加1秒，最大30秒）
