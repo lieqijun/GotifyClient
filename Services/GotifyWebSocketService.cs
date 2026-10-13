@@ -74,7 +74,7 @@ namespace GotifyClient.Services
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"重连尝试失败 (第{retryCount}次): {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"重连尝试失败: {ex.Message}");
                     
                     // 动态增加重连间隔（例如每次失败后增加1秒，最大30秒）
                     _reconnectInterval = Math.Min(_reconnectInterval + 1000, 30000);
